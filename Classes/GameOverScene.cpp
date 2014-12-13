@@ -14,28 +14,34 @@ USING_NS_CC;
 
 bool GameOverLayer::init()
 {
-	if (!CCColorLayer::initWithColor(ccc4(255, 255, 255, 255)))
+	if (!LayerColor::initWithColor(ccc4(255, 255, 255, 255)))				//
 	{
 		return false;
 	}
-	
-	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-	this->_label = CCLabelTTF::labelWithString("", "Arial", 12);
+	Size winSize = Director::sharedDirector()->getWinSize();
+	this->_label =  cocos2d::LabelTTF::create(
+		"",
+		"Arial",
+		12,
+		Size(0,0),
+		TextHAlignment::LEFT,
+		TextVAlignment::TOP);													//
 	this->_label->retain();
 	this->getLabel()->setColor(ccc3(0,0,0));
 	this->getLabel()->setPosition(ccp(winSize.width/2, winSize.height/2));
 	this->addChild(_label);
-	
-	this->runAction(CCSequence::actions(CCDelayTime::actionWithDuration(3),
-										CCCallFunc::actionWithTarget(this, callfunc_selector(GameOverLayer::gameOverDone)),
-										NULL));
-	
+
+	this->runAction(Sequence::create(
+		DelayTime::create(3),
+		CallFunc::create(this, callfunc_selector(GameOverLayer::gameOverDone)),
+		NULL));
+
 	return true;
 }
 
 void GameOverLayer::gameOverDone()
 {
-	CCDirector::sharedDirector()->replaceScene(HelloWorld::scene());
+	Director::sharedDirector()->replaceScene(HelloWorld::createScene());	//
 }
 
 GameOverLayer::~GameOverLayer()
@@ -45,12 +51,12 @@ GameOverLayer::~GameOverLayer()
 
 bool GameOverScene::init()
 {
-	if( CCScene::init() )
+	if( Scene::init() )
 	{
 		this->_layer = GameOverLayer::node();
 		this->_layer->retain();
 		this->addChild(_layer);
-		
+
 		return true;
 	}
 	else

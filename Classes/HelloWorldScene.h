@@ -3,36 +3,41 @@
 
 #include "cocos2d.h"
 
-class HelloWorld : public cocos2d::CCColorLayer
+USING_NS_CC;
+
+class HelloWorld : public cocos2d::LayerColor
 {
 public:
-	
-	~HelloWorld();
+	HelloWorld();				//
+	virtual ~HelloWorld();	//
+
 	// Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
 	virtual bool init();  
 
 	// there's no 'id' in cpp, so we recommand to return the exactly class pointer
-	static cocos2d::CCScene* scene();
+	static cocos2d::CCScene* createScene();
 	
 	void addTarget();
     
-    void spriteMoveFinished(CCNode* sender);
+    void spriteMoveFinished(Node* sender);
 
-	void gameLogic(cocos2d::ccTime dt);
-	
-	void update(cocos2d::ccTime dt);
+	void gameLogic( float dt);
+	void update(float dt);
 	
 	// a selector callback
-	virtual void menuCloseCallback(CCObject* pSender);
+	virtual void menuCloseCallback(Object* pSender);
 
 	// implement the "static node()" method manually
-	LAYER_NODE_FUNC(HelloWorld);
-	
+	CREATE_FUNC(HelloWorld);
+
 private:
-	void ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
-	
-	cocos2d::CCMutableArray<cocos2d::CCSprite*> *_targets;
-	cocos2d::CCMutableArray<cocos2d::CCSprite*> *_projectiles;
+	bool onTouchBegan(Touch *touch, Event *unused_event);
+	void onTouchMoved(Touch *touch, Event *unused_event);
+	void onTouchCancelled(Touch *touch, Event *unused_event);
+	void onTouchEnded(Touch *touch, Event *unused_event);
+
+	cocos2d::Vector<cocos2d::Sprite*> *_targets;
+	cocos2d::Vector<cocos2d::Sprite*> *_projectiles;
 	
 	int _projectilesDestroyed;
 };
